@@ -44,8 +44,8 @@ public class PlaceBikeStations : MonoBehaviour
     void Start()
     {
         WebClient client = new WebClient();
-        //Stream stream = client.OpenRead("http://localhost:81/c/");
-        using (var reader = new StreamReader(@"C:\Users\Andrew\Documents\PythonScripts\Bike Project\station_status_daily\station_info.csv"))
+        Stream stream = client.OpenRead("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/station_info.csv");
+        using (var reader = new StreamReader(stream))//@"C:\Users\Andrew\Documents\PythonScripts\Bike Project\station_status_daily\station_info.csv"))
         {
             while (!reader.EndOfStream)
             {
