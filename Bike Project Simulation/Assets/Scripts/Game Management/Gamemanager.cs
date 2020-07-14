@@ -13,7 +13,7 @@ public class Gamemanager : MonoBehaviour
     public Score scoremanager;
     public PlaceBikeStations stations;
     public int gamestate = 0;
-    List<int> selected_spawn = new List<int>(new int[100]);
+    List<int> selected_spawn = new List<int>(new int[100]); //6000
 
     public TextMeshProUGUI time;
 
@@ -36,7 +36,7 @@ public class Gamemanager : MonoBehaviour
             time.text = "Waiting to start...";
         }
 
-        if (gamestate==1)
+        if (gamestate==1) //if 10 that's because I'm testing other features
         {
             timer.Start();
             //spawn trucks 
@@ -49,6 +49,7 @@ public class Gamemanager : MonoBehaviour
 
                 for (int i = 0; i < selected_spawn.Count; i++)
                 {
+                    //choose any station 6000 times, with a probability distribution from excel data file
                     selected_spawn[i] = Random.Range(0, 1011);
                 }
 
