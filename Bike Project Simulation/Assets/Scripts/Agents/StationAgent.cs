@@ -11,6 +11,9 @@ public class StationAgent : MonoBehaviour
 
     public GameObject bike_prefab;
 
+
+    List<int> speed_dist = new List<int>(new int[100]);
+
     public void SpawnAgent()
     {
         //creates an agent of some speed
@@ -19,7 +22,7 @@ public class StationAgent : MonoBehaviour
         var biker_settings = biker.GetComponent<BikeAgent>();
 
         biker_settings.StartingStation = name;
-        biker_settings.AgentSpeed = 150f; //this should be randomly set from speed distribution
+        biker_settings.AgentSpeed = 150f; //this should be randomly set from speed distribution from 6mph to 20 mph, 
     }
 
 }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class ExcelDataFiles : MonoBehaviour
 {
-    //data management (probably should go in its own script)
     //start dist
+    List<List<string>> StationStartP = new List<List<string>>();
     //end dist
+    List<List<string>> StationEndP = new List<List<string>>();
     //start and end dist
+    List<List<string>> StartEndMatch = new List<List<string>>();
     //total rides
     //daily bike distribution init data
-    //speed distribution
-
     void Start()
     {
         
