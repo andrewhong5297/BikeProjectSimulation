@@ -100,7 +100,7 @@ public class PlaceBikeStations : MonoBehaviour
     {
         //cached origin at bottom left, with some manual adjustment due to loss of accuracy (8 decimal points of lat/lon versus only 4 when pulling from OSM)
         float position_x = map.transform.position.x - scaled_length / 2 + 11f;
-        float position_z = map.transform.position.z - scaled_width / 2 + 39.0f;
+        float position_z = map.transform.position.z - scaled_width / 2 + 44.0f;
 
         int idx = 0;
         foreach (string station in file_station_name)

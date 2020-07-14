@@ -40,9 +40,18 @@ public class ExcelDataFiles : MonoBehaviour
         ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startendstationmatching1.csv", StartEndMatch1);
         ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startendstationmatching2.csv", StartEndMatch2); //need to append
         ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/ridersdayhourdistribution.csv", RidesDistribution);
+
+        foreach (string key in StartEndMatch1.Keys)
+        {
+            foreach (string value in StartEndMatch2[key])
+            {
+                StartEndMatch1[key].Add(value);
+            }
+        }
+
         UnityEngine.Debug.Log(timer.Elapsed);
         timer.Stop();
-        stations = StationStartP["Wyckoff St & 3 Ave"];
+        stations = StartEndMatch1["Wyckoff St & 3 Ave"];
     }
 
     //probably have a different void for each file. 

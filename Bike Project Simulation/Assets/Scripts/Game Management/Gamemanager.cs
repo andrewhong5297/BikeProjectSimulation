@@ -18,7 +18,7 @@ public class Gamemanager : MonoBehaviour
     public TextMeshProUGUI time;
 
     //track time
-    public Stopwatch timer = new Stopwatch();
+    Stopwatch timer = new Stopwatch();
     public int gameTime;
     public int day; //0-6
     public int hour; //0-23
@@ -42,7 +42,7 @@ public class Gamemanager : MonoBehaviour
             //spawn trucks 
             
             //spawn agents randomly
-            if (timer.ElapsedMilliseconds >= 10000) //every 5 seconds update time and spawn new bikers
+            if (timer.ElapsedMilliseconds >= 10000) //every 10 seconds update time and spawn new bikers
             {
                 gameTime += 1;
                 time.text = "Hour of Day: " + gameTime;
