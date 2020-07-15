@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &851483468866207762
+--- !u!1 &8709925793215486559
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,51 +8,50 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8236840857344178350}
-  - component: {fileID: 9125286824926225426}
-  - component: {fileID: 8222235878755172370}
-  - component: {fileID: 1057736971063821528}
-  - component: {fileID: 7044191570641641171}
-  - component: {fileID: 691796544421080293}
+  - component: {fileID: 5657794935308019788}
+  - component: {fileID: 3737847208339755642}
+  - component: {fileID: 6981434087245164163}
+  - component: {fileID: 9160902070237596323}
+  - component: {fileID: 602409622}
   m_Layer: 0
   m_Name: Truck
-  m_TagString: Untagged
+  m_TagString: Truck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8236840857344178350
+--- !u!4 &5657794935308019788
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851483468866207762}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.225, y: 8.83, z: -0.057373047}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_GameObject: {fileID: 8709925793215486559}
+  m_LocalRotation: {x: -0.47351268, y: -0.52517015, z: 0.524987, w: 0.473678}
+  m_LocalPosition: {x: 5.628801, y: 12.1950445, z: 0.0015485287}
+  m_LocalScale: {x: 8.071776, y: 8.071776, z: 8.071776}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &9125286824926225426
+  m_LocalEulerAnglesHint: {x: 5.9020004, y: -90.00201, z: 89.98}
+--- !u!33 &3737847208339755642
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851483468866207762}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &8222235878755172370
+  m_GameObject: {fileID: 8709925793215486559}
+  m_Mesh: {fileID: 7673246021391805175, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
+--- !u!23 &6981434087245164163
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851483468866207762}
+  m_GameObject: {fileID: 8709925793215486559}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -61,7 +60,13 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: -2586296408049715105, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
+  - {fileID: -8848810374240701247, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
+  - {fileID: -1580535799172915004, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
+  - {fileID: -3287519189645926194, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
+  - {fileID: -1362402942781197322, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
+  - {fileID: 8992934318045909824, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
+  - {fileID: 7490952440742008943, guid: e3d95cfe001be2b40b958c9ee0d42ea7, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,44 +87,37 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &1057736971063821528
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851483468866207762}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7044191570641641171
+--- !u!114 &9160902070237596323
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851483468866207762}
+  m_GameObject: {fileID: 8709925793215486559}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd3da36169345554e83b61968ccf5de8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stations: {fileID: 3172811294806860192, guid: e8631a4525873f644857493ffa3ca6be,
+    type: 3}
+  gamemanager: {fileID: 0}
   BikesCarried: 0
   DistanceRoam: 0
-  truck: {fileID: 691796544421080293}
---- !u!195 &691796544421080293
+  truck: {fileID: 602409622}
+  StartingStation: 
+  EndingStation: 
+  AgentSpeed: 250
+--- !u!195 &602409622
 NavMeshAgent:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 851483468866207762}
+  m_GameObject: {fileID: 8709925793215486559}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.08
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50

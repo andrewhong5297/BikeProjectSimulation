@@ -1,30 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Security.AccessControl;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class BikeAgent : MonoBehaviour
 {
-    public Score scorecard;
-    public PlaceBikeStations stations;
+    GameObject stationmanager;
+    GameObject gamemanager;
 
-    //need a time variable to take from somewhere... right now 5 or 10 seconds in an hour makes the most sense. 
     public NavMeshAgent Agent;
     public Stopwatch timer = new Stopwatch();
 
+    //station vars
     public string StartingStation; //agent should be instantiated from the Bike Station (stationagent) script
     public string EndingStation;
-
     GameObject end;
     bool endfound = false;
     GameObject start;
     bool startfound = false;
 
+    List<string> probabilities = new List<string>();
+
+    public List<string> test = new List<string>();
+
+    //speeds
     public float AgentSpeed; //distance per second.
     public float distancetotravel;
-
     float timetotravel; //time to go to endstation, in case something goes wrong with navmesh
+
+    private void Start()
+    {
+        Agent.updateUpAxis = false;
+        gamemanager = GameObject.Find("GameManager");
+        stationmanager = GameObject.Find("Station Manager");
+    }
 
     // Update is called once per frame
     void Update()
@@ -63,6 +75,7 @@ public class BikeAgent : MonoBehaviour
         start = GameObject.Find(StartingStation);
 
         var start_status = start.GetComponent<StationAgent>();
+        var scorecard = gamemanager.GetComponent<Score>();
 
         while (start_status.BikesAvailable == 0)
         {
@@ -77,8 +90,29 @@ public class BikeAgent : MonoBehaviour
 
     void FindDestination()
     {
-        //chooses out of pdf of 15 most popular stations, checks availability of that station. 
-        EndingStation = "Scholes St & Manhattan Ave";
+        var time = gamemanager.GetComponent<Gamemanager>();
+        var data = gamemanager.GetComponent<ExcelDataFiles>();
+        
+        int day = time.day;
+        int hour = time.hour;
+
+        UnityEngine.Debug.LogWarning(day + "-" + hour + "-" + StartingStation);
+        test = data.StartEndMatch1["unique"];
+        int index_of_startingstation = data.StartEndMatch1["unique"].IndexOf(day + "-" + hour + "-" + StartingStation);
+
+        UnityEngine.Debug.Log(index_of_startingstation + "is index of unique");
+
+        foreach (string key in data.StartEndMatch1.Keys)
+        {
+            probabilities.Add(data.StartEndMatch1[key][index_of_startingstation]);
+        }
+        
+        //chooses out of cdf of matched stations
+        int chosen_station = data.GetRandomIndex(probabilities);
+        UnityEngine.Debug.Log("chosen station number: " + chosen_station);
+
+        EndingStation = data.StartEndMatch1.ElementAt(chosen_station).Key;
+
         end = GameObject.Find(EndingStation);
         var end_status = end.GetComponent<StationAgent>();
 
@@ -92,6 +126,9 @@ public class BikeAgent : MonoBehaviour
         Agent.speed = AgentSpeed;
         endfound = true;
 
+        var start_status = start.GetComponent<StationAgent>();
+        start_status.takebike();
+
         //timer parameters
         Vector3 dist_vect = end.transform.position - transform.position;
         float dist_new = dist_vect.sqrMagnitude * 1.2f; //multiplier for not birds-eye-view
@@ -103,6 +140,7 @@ public class BikeAgent : MonoBehaviour
     void CheckEnd()
     {
         var end_status = end.GetComponent<StationAgent>();
+        var scorecard = gamemanager.GetComponent<Score>();
 
         while (end_status.Capacity == end_status.BikesAvailable)
         {
@@ -123,7 +161,7 @@ public class BikeAgent : MonoBehaviour
     void OnDestinationReached()
     {
         var end_status = end.GetComponent<StationAgent>();
-        end_status.BikesAvailable += 1;
+        end_status.returnbike();
         //add one avail bike then destroy agent
         Destroy(gameObject);
     }
@@ -133,6 +171,7 @@ public class BikeAgent : MonoBehaviour
         //finds nearest station
         GameObject closest = input_station;
         float dist_old = 999f;
+        var stations = stationmanager.GetComponent<PlaceBikeStations>();
         foreach (GameObject station in stations.stations)
         {
             Vector3 dist_vect = station.transform.position - input_station.transform.position;

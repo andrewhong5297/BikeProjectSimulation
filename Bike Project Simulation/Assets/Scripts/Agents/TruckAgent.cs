@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class TruckAgent : MonoBehaviour
 {
     public PlaceBikeStations stations; //for accessing list of stations
+    GameObject gamemanager;
 
     public int BikesCarried;
     public float DistanceRoam;
@@ -17,11 +18,13 @@ public class TruckAgent : MonoBehaviour
     GameObject end;
     GameObject start;
 
-    public float AgentSpeed = 250f; //need to figure out scale of map then adjust by time scale
+    public float AgentSpeed = 40000f; //probably faster
 
     // Start is called before the first frame update
     void Start()
     {
+        gamemanager = GameObject.Find("GameManager");
+        truck.updateUpAxis = false;
         start = GameObject.Find(StartingStation);
         end = GameObject.Find(StartingStation); 
     }
@@ -40,7 +43,13 @@ public class TruckAgent : MonoBehaviour
 
     GameObject ChooseNextStation()
     {
-        //end is the closest station 
+        var data = gamemanager.GetComponent<ExcelDataFiles>();
+        //get most popular end stations by time
+
+        //get most popular start stations by time
+
+        //have some sort of flag for if that station has already been truck assigned?
+
         return end;
     }
     

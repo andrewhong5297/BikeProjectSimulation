@@ -9,8 +9,10 @@ using UnityEngine;
 
 public class ExcelDataFiles : MonoBehaviour
 {
+    
     public Stopwatch timer = new Stopwatch();
 
+    #region init excel dictionary lists
     //start dist
     public Dictionary<string, List<string>> StationStartP = new Dictionary<string, List<string>>();
 
@@ -27,31 +29,83 @@ public class ExcelDataFiles : MonoBehaviour
     //daily bike distribution init data
     //need to upload this later 
 
-    //list of stations in data?
-    public List<string> stations = new List<string>();
+    public List<string> test = new List<string>();
 
-    public string[] test;
+    #endregion
+    
+    public List<int> speed_dist = new List<int>(new int[100]);
 
-    void Start()
+    private void Awake()
     {
+        CreateSpeedDist();
+
         timer.Start();
+
         ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startstationdistribution.csv", StationStartP);
         ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/endstationdistribution.csv", StationEndP);
-        ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startendstationmatching1.csv", StartEndMatch1);
-        ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startendstationmatching2.csv", StartEndMatch2); //need to append
-        ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/ridersdayhourdistribution.csv", RidesDistribution);
 
+        ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startendstationmatching1.csv", StartEndMatch1);
+        ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startendstationmatching2.csv", StartEndMatch2);
+         
+        ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/ridersdayhourdistribution.csv", RidesDistribution);
+ 
+        
+        #region append and remove data for start/end matching
         foreach (string key in StartEndMatch1.Keys)
         {
             foreach (string value in StartEndMatch2[key])
             {
                 StartEndMatch1[key].Add(value);
             }
+            //free up memory
+            StartEndMatch2.Remove(key);
         }
-
-        UnityEngine.Debug.Log(timer.Elapsed);
+        #endregion
+        UnityEngine.Debug.Log("finished " + timer.Elapsed);
         timer.Stop();
-        stations = StartEndMatch1["Wyckoff St & 3 Ave"];
+    }
+
+    //create speed_dist from 6mph to 18 mph
+    void CreateSpeedDist()
+    {
+        //create speed_dist
+        int i = 0;
+        while (i < 100)
+        {
+            if (i < 5)
+            {
+                speed_dist[i] = 6;
+            }
+            if (i < 10 && i >= 5)
+            {
+                speed_dist[i] = 7;
+            }
+            if (i < 15 && i >= 10)
+            {
+                speed_dist[i] = 8;
+            }
+
+            if (i < 40 && i >= 15)
+            {
+                speed_dist[i] = 10;
+            }
+
+            if (i < 85 && i >= 40)
+            {
+                speed_dist[i] = 12;
+            }
+
+            if (i < 90 && i >= 85)
+            {
+                speed_dist[i] = 18;
+            }
+
+            if (i < 100 && i >= 90)
+            {
+                speed_dist[i] = 20;
+            }
+            i++;
+        }
     }
 
     //probably have a different void for each file. 
@@ -84,7 +138,15 @@ public class ExcelDataFiles : MonoBehaviour
                     int i = 0;
                     foreach (string key in keys)
                     {
+                        if(string.IsNullOrEmpty(new List<string> { values[i] }[0]))
+                        {
+                        dataframe[key].Add("0"); //data was left as nan to increase read in time
+                        }
+                        else
+                        {
                         dataframe[key].Add(new List<string> { values[i] }[0]);
+                        }
+                        
                         i++;
                     }
                 }
@@ -99,5 +161,29 @@ public class ExcelDataFiles : MonoBehaviour
             dataframe[key].Remove("filler");
             j++;
         }
+    }
+
+    //weighted dist function
+    public int GetRandomIndex(List<string> probabilities)
+    {
+        float chosen_p = UnityEngine.Random.Range(0f, 1f);
+
+        List<float> num_probabilities = probabilities.Select(s => float.Parse(s)).ToList();
+
+        int returned_idx=0;
+
+        foreach (float prob in num_probabilities)
+        {
+            if(chosen_p >= prob)
+            {
+                returned_idx = num_probabilities.IndexOf(prob);
+            }
+            if(chosen_p < prob)
+            {
+                break; //end when probability has been found
+            }
+        }
+
+        return returned_idx;
     }
 }
