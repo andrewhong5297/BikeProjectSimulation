@@ -22,10 +22,6 @@ public class BikeAgent : MonoBehaviour
     GameObject start;
     bool startfound = false;
 
-    List<string> probabilities = new List<string>();
-
-    public List<string> test = new List<string>();
-
     //speeds
     public float AgentSpeed; //distance per second.
     public float distancetotravel;
@@ -36,24 +32,27 @@ public class BikeAgent : MonoBehaviour
         Agent.updateUpAxis = false;
         gamemanager = GameObject.Find("GameManager");
         stationmanager = GameObject.Find("Station Manager");
+        FindDestination();
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*
         if (!startfound)
         {
             CheckStart();
         }
-
+        
         //agent moves towards new start station if there is one
         if (!endfound)
         {
             if (Vector3.Distance(gameObject.transform.position, start.transform.position) <= 20)
             {
-                FindDestination();
+                
             }
         }
+        */
 
         //agent moves towards end station
         if (endfound)
@@ -90,6 +89,8 @@ public class BikeAgent : MonoBehaviour
 
     void FindDestination()
     {
+
+        //make function wait till done, or move from update to start loop instead and checkstart to gamemanager loop 
         var time = gamemanager.GetComponent<Gamemanager>();
         var data = gamemanager.GetComponent<ExcelDataFiles>();
         
@@ -97,21 +98,12 @@ public class BikeAgent : MonoBehaviour
         int hour = time.hour;
 
         UnityEngine.Debug.LogWarning(day + "-" + hour + "-" + StartingStation);
-        test = data.StartEndMatch1["unique"];
-        int index_of_startingstation = data.StartEndMatch1["unique"].IndexOf(day + "-" + hour + "-" + StartingStation);
-
-        UnityEngine.Debug.Log(index_of_startingstation + "is index of unique");
-
-        foreach (string key in data.StartEndMatch1.Keys)
-        {
-            probabilities.Add(data.StartEndMatch1[key][index_of_startingstation]);
-        }
         
         //chooses out of cdf of matched stations
-        int chosen_station = data.GetRandomIndex(probabilities);
+        int chosen_station = data.GetRandomIndex(data.StartEndMatch1[day + "-" + hour + "-" + StartingStation]);
         UnityEngine.Debug.Log("chosen station number: " + chosen_station);
 
-        EndingStation = data.StartEndMatch1.ElementAt(chosen_station).Key;
+        EndingStation = data.StartEndMatch1["end station name"][chosen_station];
 
         end = GameObject.Find(EndingStation);
         var end_status = end.GetComponent<StationAgent>();

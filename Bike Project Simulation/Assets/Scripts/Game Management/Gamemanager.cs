@@ -74,12 +74,8 @@ public class Gamemanager : MonoBehaviour
                 {
                     //choose any station x times / minutes in an hour scaled
                     float random_station = Random.Range(0f, 1f);
-                    
 
                     int selected = data_script.GetRandomIndex(data_script.StationStartP[day + "-" + hour]); //get index using data.function
-
-                    UnityEngine.Debug.Log("other script read index: " + data_script.StartEndMatch1["unique"].IndexOf("0-0-2 Ave & E 122 St"));
-
                     //get station gameobject
                     GameObject selected_station = GameObject.Find(data_script.StationStartP["start station name"][selected]);
                     UnityEngine.Debug.LogWarning("Selected station to spawn: " + selected_station.name);
