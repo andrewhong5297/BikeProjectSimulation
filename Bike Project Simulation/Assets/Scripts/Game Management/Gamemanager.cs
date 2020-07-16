@@ -18,7 +18,9 @@ public class Gamemanager : MonoBehaviour
     Stopwatch hourtimer = new Stopwatch();
     Stopwatch tenminutetimer = new Stopwatch();
     public int day = 0; //0-6
-    public Dictionary<int, string> dayconverter = new Dictionary<int, string>(){
+    public int hour = 0; //0-23
+    
+    Dictionary<int, string> dayconverter = new Dictionary<int, string>(){
         {0,"Monday" },
         {1,"Tuesday" },
         {2,"Wednesday" },
@@ -28,19 +30,19 @@ public class Gamemanager : MonoBehaviour
         {6,"Sunday" }
     };
 
-    public int hour = 0; //0-23
-    public int gameHour = 30000; //in milliseconds
-    public int gameTenMinute;
-    //lists for dataframes
+    int gameHour = 1000; //in milliseconds
+    int gameTenMinute;
+
+
     int num_rides;
+    bool num_rides_found = false;
     List<string> station_spawn = new List<string>();
 
     //parameters
-    public string weather;
-    public int numTrucks;
-    public float ridershipStress = 1.0f; //ridership stress scenario value
+    string weather;
+    int numTrucks;
+    float ridershipStress = 1.0f; //ridership stress scenario value
     //truck distance? rider avg speed? 
-    //
 
     private void Start()
     {
@@ -54,7 +56,7 @@ public class Gamemanager : MonoBehaviour
     void Update()
     {
         //spawn trucks randomly? or at citibike HQ? 2nd ave and 36th street. maybe in gamestate 0 
-
+        
         if (gamestate == 1) //doesn't begin until data has been read in and bikes placed
         {
             var data_script = gamemanager.GetComponent<ExcelDataFiles>();
@@ -64,32 +66,44 @@ public class Gamemanager : MonoBehaviour
             {
                 hourtimer.Restart();
 
-                hour += 1;
-                
-                num_rides = int.Parse(data_script.RidesDistribution[day + "-" + hour][0])/10; //divide by 10 so it can run on my pc
-
-                time.text = "Day: " + dayconverter[day] + "\nHour: " + hour;
-
-                if (hour == 24)
+                if (hour == 23)
                 {
                     hour = 0;
                     day += 1;
                     if (day == 7)
-                    {
-                        gamestate = 2; //ends game
-                    }
+                        {
+                            gamestate = 2; //ends game
+                        }
+                }
+                else
+                {
+                    hour += 1;
                 }
 
+                UnityEngine.Debug.LogError(day + "-" + hour);
+                num_rides = int.Parse(data_script.RidesDistribution[day + "-" + hour][0]); //divide by 10 so it can run on my pc
+                num_rides_found = true;
+
+                time.text = "Day: " + dayconverter[day] + "\nHour: " + hour;
+                UnityEngine.Debug.LogWarning("number of riders this hour: " + num_rides);
+
+                SpawnRiders(num_rides);
             }
 
+            #region ten minute spawning
+            /*
             //spawn agents randomly every ten game minutes
-            if (tenminutetimer.ElapsedMilliseconds > gameTenMinute)
+            if (tenminutetimer.ElapsedMilliseconds > gameTenMinute && num_rides_found);
             {
                 tenminutetimer.Restart();
-
+                
+                UnityEngine.Debug.LogWarning("starting call loop...");
                 //spawn agents throughout the hour next?
-                int riders_spawned = 0;
-                while (riders_spawned < num_rides/6 * ridershipStress) //could randomly move ridershipStress around
+                float riders_spawned = 0;
+                float riders_to_spawn = num_rides / 6;
+
+                UnityEngine.Debug.LogWarning("riders to spawn: " + riders_to_spawn);
+                while (riders_spawned < num_rides) //could randomly move ridershipStress around
                 {
                     float random_station = Random.Range(0f, 1f);
 
@@ -97,7 +111,7 @@ public class Gamemanager : MonoBehaviour
                     GameObject selected_station = GameObject.Find(data_script.StationStartP["start station name"][selected]);
 
                     var selected_station_script = selected_station.GetComponent<StationAgent>();
-
+                    UnityEngine.Debug.LogWarning("selected station " + selected_station.name);
                     if (selected_station_script.BikesAvailable == 0)
                     {
                         var score_script = gamemanager.GetComponent<Score>();
@@ -105,13 +119,14 @@ public class Gamemanager : MonoBehaviour
                     }
                     else
                     {
+                        UnityEngine.Debug.LogWarning("calling spawnagent...");
                         selected_station_script.SpawnAgent();
+                        riders_spawned++;
                     }
-
-                    riders_spawned++;
-
                 }
             }
+            */
+            #endregion
         }
 
         //end game
@@ -134,6 +149,36 @@ public class Gamemanager : MonoBehaviour
             GameObject[] trucks = GameObject.FindGameObjectsWithTag("Truck");
             foreach (GameObject truck in trucks)
                 GameObject.Destroy(truck);
+        }
+    }
+
+    void SpawnRiders(int num_rides)
+    {
+        var data_script = gamemanager.GetComponent<ExcelDataFiles>();
+
+        int riders_spawned = 0;
+        while (riders_spawned < num_rides) //could randomly move ridershipStress around
+        {
+            float random_station = Random.Range(0f, 1f);
+            int selected = data_script.GetRandomIndex(data_script.StationStartP[day + "-" + hour]); //get index using data.function
+            GameObject selected_station = GameObject.Find(data_script.StationStartP["start station name"][selected]);
+
+            var selected_station_script = selected_station.GetComponent<StationAgent>();
+            //UnityEngine.Debug.LogWarning("selected station " + selected_station.name);
+            
+            if (selected_station_script.BikesAvailable == 0)
+            {
+                var score_script = gamemanager.GetComponent<Score>();
+                score_script.NoBikes += 1;
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning("calling spawnagent...");
+                //selected_station_script.SpawnAgent();
+                riders_spawned++;
+            }
+            
+            riders_spawned++;
         }
     }
 }

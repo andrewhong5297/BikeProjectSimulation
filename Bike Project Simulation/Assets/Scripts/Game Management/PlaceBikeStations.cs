@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlaceBikeStations : MonoBehaviour
 {
     public GameObject map;
-    public float scaled_length, scaled_width;
+    float scaled_length, scaled_width;
 
     public GameObject bikestation; //to be instantiated
 

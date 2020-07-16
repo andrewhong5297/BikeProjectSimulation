@@ -15,10 +15,13 @@ public class StationAgent : MonoBehaviour
     private void Start()
     {
         gamemanager = GameObject.Find("GameManager");
+        CheckColor();
     }
     
     public void SpawnAgent()
     {
+        Debug.LogWarning("agent spawned");
+
         GameObject biker = Instantiate(bike_prefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
 
         var biker_settings = biker.GetComponent<BikeAgent>();
@@ -36,10 +39,9 @@ public class StationAgent : MonoBehaviour
         int rand = Random.Range(0, 99);
         float chosen_speed = speed.speed_dist[rand]*2500f/3f;
 
-        Debug.LogWarning(chosen_speed);
-
-        //fix later
-        biker_settings.AgentSpeed = chosen_speed; //((chosen_speed / 3600)*25000)/((10)/3600); //this should be randomly set from speed distribution from 6mph to 20 mph, 
+        
+        //fix
+        biker_settings.AgentSpeed = 15000f; //((chosen_speed / 3600)*25000)/((10)/3600); //this should be randomly set from speed distribution from 6mph to 20 mph, 
     }
 
     public void takebike()

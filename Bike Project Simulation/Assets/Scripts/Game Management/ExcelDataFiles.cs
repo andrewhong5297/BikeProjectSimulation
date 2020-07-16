@@ -10,7 +10,7 @@ using UnityEngine;
 public class ExcelDataFiles : MonoBehaviour
 {
     
-    public Stopwatch timer = new Stopwatch();
+    Stopwatch timer = new Stopwatch();
 
     #region init excel dictionary lists
     //start dist
@@ -25,11 +25,6 @@ public class ExcelDataFiles : MonoBehaviour
 
     //total rides
     public Dictionary<string, List<string>> RidesDistribution = new Dictionary<string, List<string>>();
-
-    //daily bike distribution init data
-    //need to upload this later 
-
-    public List<string> test = new List<string>();
 
     #endregion
     

@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 6539974059863863087}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -8.85, y: 6.77, z: -6.54}
-  m_LocalScale: {x: 2.2492273, y: 2.2492273, z: 2.2492273}
+  m_LocalScale: {x: 3.4563875, y: 3.4563875, z: 3.4563875}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -92,9 +92,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe7237a61eb95464088624a1906e266f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamemanager: {fileID: 1292002390307840986, guid: 82aab21d8b2280648b6cd14876adea38,
-    type: 3}
-  speeds: 
   Id: 0
   Capacity: 0
   BikesAvailable: 0

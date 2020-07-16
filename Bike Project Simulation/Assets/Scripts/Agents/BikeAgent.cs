@@ -12,19 +12,19 @@ public class BikeAgent : MonoBehaviour
     GameObject gamemanager;
 
     public NavMeshAgent Agent;
-    public Stopwatch timer = new Stopwatch();
+    Stopwatch timer = new Stopwatch();
 
     //station vars
     public string StartingStation;
-    public string EndingStation;
+    string EndingStation;
     GameObject end;
     bool endfound = false;
     GameObject start;
 
     //speeds
     public float AgentSpeed; //distance per second.
-    public float distancetotravel;
-    public float timetotravel; //time to go to endstation, in case something goes wrong with navmesh pathfinding
+    float distancetotravel;
+    float timetotravel; //time to go to endstation, in case something goes wrong with navmesh pathfinding
 
     private void Start()
     {
@@ -41,6 +41,7 @@ public class BikeAgent : MonoBehaviour
         stationmanager = GameObject.Find("Station Manager");
         start = GameObject.Find(StartingStation);
         FindDestination();
+        UnityEngine.Debug.LogWarning("destination found");
     }
 
     // Update is called once per frame
