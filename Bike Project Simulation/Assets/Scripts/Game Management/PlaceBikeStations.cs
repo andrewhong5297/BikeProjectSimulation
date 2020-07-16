@@ -15,9 +15,9 @@ public class PlaceBikeStations : MonoBehaviour
     public Gamemanager manager;
     public List<GameObject> stations = new List<GameObject>();
 
-    //csv file
+    //csv file (script created before exceldatafiles, so not formatted in same dict/list way)
     #region excel data lists
-    List<string> file_index = new List<string>();
+    List<string> file_bikes_avail = new List<string>();
     List<string> file_lon = new List<string>();
     List<string> file_station_name = new List<string>();
     List<string> file_station_id = new List<string>();
@@ -25,7 +25,7 @@ public class PlaceBikeStations : MonoBehaviour
     List<string> file_lat = new List<string>();
 
     [SerializeField]
-    List<int> index = new List<int>();
+    List<int> bikes_avail = new List<int>();
     [SerializeField]
     List<int> station_id = new List<int>();
     [SerializeField]
@@ -52,21 +52,21 @@ public class PlaceBikeStations : MonoBehaviour
                 var line = reader.ReadLine();
                 var values = line.Split(',');
 
-                file_index.Add(values[0]);
-                file_lon.Add(values[1]);
-                file_lat.Add(values[2]);
-                file_station_name.Add(values[3]);
-                file_station_id.Add(values[4]);
-                file_capacity.Add(values[5]);
+                file_lon.Add(values[0]);
+                file_lat.Add(values[1]);
+                file_station_name.Add(values[2]);
+                file_station_id.Add(values[3]);
+                file_capacity.Add(values[4]);
+                file_bikes_avail.Add(values[5]);
             }
         }
 
         //convert from string to int/double type
-        index = file_index.Select(s => int.Parse(s)).ToList();
         lon = file_lon.Select(s => float.Parse(s)).ToList();
         lat = file_lat.Select(s => float.Parse(s)).ToList();
         station_id = file_station_id.Select(s => int.Parse(s)).ToList();
         capacity = file_capacity.Select(s => int.Parse(s)).ToList();
+        bikes_avail = file_bikes_avail.Select(s => int.Parse(s)).ToList();
 
         //scale before instantiation
         scaled_length = map.GetComponent<MeshRenderer>().bounds.size.x;
@@ -117,7 +117,7 @@ public class PlaceBikeStations : MonoBehaviour
             var stationscript = bikestation_new.GetComponent<StationAgent>(); //set station starting parameters
             stationscript.Id = station_id[idx];
             stationscript.Capacity = capacity[idx];
-            stationscript.BikesAvailable = 10; //change this to a certain day's instantiation? or maybe I do an averaging of days... and then you can choose day from UI. 
+            stationscript.BikesAvailable = bikes_avail[idx]; //change this to a certain day's instantiation? or maybe I do an averaging of days... and then you can choose day from UI. 
 
             idx++;
         }

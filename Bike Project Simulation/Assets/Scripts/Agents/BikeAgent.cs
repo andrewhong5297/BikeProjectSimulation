@@ -15,53 +15,58 @@ public class BikeAgent : MonoBehaviour
     public Stopwatch timer = new Stopwatch();
 
     //station vars
-    public string StartingStation; //agent should be instantiated from the Bike Station (stationagent) script
+    public string StartingStation;
     public string EndingStation;
     GameObject end;
     bool endfound = false;
     GameObject start;
-    bool startfound = false;
 
     //speeds
     public float AgentSpeed; //distance per second.
     public float distancetotravel;
-    float timetotravel; //time to go to endstation, in case something goes wrong with navmesh
+    public float timetotravel; //time to go to endstation, in case something goes wrong with navmesh pathfinding
 
     private void Start()
     {
+        
+        NavMeshHit myNavHit;
+
+        if (NavMesh.SamplePosition(transform.position, out myNavHit, 500, -1))
+        {
+            transform.position = myNavHit.position; //some of the stations aren't really on the navmesh so this helps reset it
+        }
+        
         Agent.updateUpAxis = false;
         gamemanager = GameObject.Find("GameManager");
         stationmanager = GameObject.Find("Station Manager");
+        start = GameObject.Find(StartingStation);
         FindDestination();
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
-        if (!startfound)
-        {
-            CheckStart();
-        }
-        
-        //agent moves towards new start station if there is one
-        if (!endfound)
-        {
-            if (Vector3.Distance(gameObject.transform.position, start.transform.position) <= 20)
-            {
-                
-            }
-        }
-        */
-
-        //agent moves towards end station
+        //only check once find destination has finished running
         if (endfound)
         {
-            if (Vector3.Distance(gameObject.transform.position, end.transform.position) <= 20 || timer.ElapsedMilliseconds/1000 > timetotravel) // or if time is up
+            timer.Start();
+            float timeelap = timer.ElapsedMilliseconds / 1000f;
+            
+            /*
+            //timetotravel needs to be fixed
+            if(timeelap > 3)
+            {   
+                UnityEngine.Debug.LogError("destroyed on time basis");
+                CheckEnd();
+                OnDestinationReached();
+            }
+            */
+
+            if (Vector3.Distance(gameObject.transform.position, end.transform.position) <= 20)
             {
                 CheckEnd();
                 //nested loop in case we have to go to a different dock
-                if (Vector3.Distance(gameObject.transform.position, end.transform.position) <= 20 || timer.ElapsedMilliseconds / 1000 > timetotravel)
+                if (Vector3.Distance(gameObject.transform.position, end.transform.position) <= 20)
                 {
                     OnDestinationReached();
                 }
@@ -69,41 +74,23 @@ public class BikeAgent : MonoBehaviour
         }
     }
 
-    void CheckStart()
-    {
-        start = GameObject.Find(StartingStation);
-
-        var start_status = start.GetComponent<StationAgent>();
-        var scorecard = gamemanager.GetComponent<Score>();
-
-        while (start_status.BikesAvailable == 0)
-        {
-            scorecard.NoBikes += 1;
-            start = FindNearestStation(start);
-        }
-
-        Agent.SetDestination(start.transform.position);
-        Agent.speed = AgentSpeed;
-        startfound = true;
-    }
-
     void FindDestination()
     {
-
-        //make function wait till done, or move from update to start loop instead and checkstart to gamemanager loop 
         var time = gamemanager.GetComponent<Gamemanager>();
         var data = gamemanager.GetComponent<ExcelDataFiles>();
-        
-        int day = time.day;
-        int hour = time.hour;
 
-        UnityEngine.Debug.LogWarning(day + "-" + hour + "-" + StartingStation);
-        
-        //chooses out of cdf of matched stations
-        int chosen_station = data.GetRandomIndex(data.StartEndMatch1[day + "-" + hour + "-" + StartingStation]);
-        UnityEngine.Debug.Log("chosen station number: " + chosen_station);
-
-        EndingStation = data.StartEndMatch1["end station name"][chosen_station];
+        //chooses out of cdf of matched stations, sometimes key error so just keep searching until found.
+        try
+        {
+            int chosen_station = data.GetRandomIndex(data.StartEndMatch1[time.day + "-" + time.hour + "-" + StartingStation]);
+            //UnityEngine.Debug.Log("chosen station number: " + chosen_station);
+            EndingStation = data.StartEndMatch1["end station name"][chosen_station];
+        }
+        catch (KeyNotFoundException)
+        {
+            UnityEngine.Debug.Log("keynotfound");
+            EndingStation = FindNearestStation(start).name;
+        }
 
         end = GameObject.Find(EndingStation);
         var end_status = end.GetComponent<StationAgent>();
@@ -111,13 +98,15 @@ public class BikeAgent : MonoBehaviour
         while (end_status.Capacity == end_status.BikesAvailable)
         {
             end = FindNearestStation(end);
-            //no penalty as haven't left yet
+            //no penalty here as haven't left yet
         }
 
         Agent.SetDestination(end.transform.position);
         Agent.speed = AgentSpeed;
         endfound = true;
 
+        //-1 bike from start station 
+        start = GameObject.Find(StartingStation);
         var start_status = start.GetComponent<StationAgent>();
         start_status.takebike();
 
@@ -126,7 +115,6 @@ public class BikeAgent : MonoBehaviour
         float dist_new = dist_vect.sqrMagnitude * 1.2f; //multiplier for not birds-eye-view
         distancetotravel = dist_new;
         timetotravel = AgentSpeed / dist_new;
-        timer.Start();
     }
 
     void CheckEnd()
@@ -140,6 +128,7 @@ public class BikeAgent : MonoBehaviour
             end = FindNearestStation(end);
         }
 
+        //need a try except here to just call time to travel
         Agent.SetDestination(end.transform.position);
 
         //timer parameters
@@ -169,7 +158,7 @@ public class BikeAgent : MonoBehaviour
             Vector3 dist_vect = station.transform.position - input_station.transform.position;
             float dist_new = dist_vect.sqrMagnitude;
 
-            if(dist_new < dist_old) 
+            if (dist_new < dist_old)
             {
                 closest = station;
             }

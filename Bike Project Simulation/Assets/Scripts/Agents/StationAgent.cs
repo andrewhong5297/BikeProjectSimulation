@@ -5,9 +5,7 @@ using UnityEngine;
 public class StationAgent : MonoBehaviour
 {
     GameObject gamemanager;
-    public List<int> speeds = new List<int>();
 
-    //some way to track time?
     public int Id;
     public int Capacity;
     public int BikesAvailable;
@@ -36,22 +34,41 @@ public class StationAgent : MonoBehaviour
 
         //so for every speed between 6mph and 18mph, we have to first convert to mps
         int rand = Random.Range(0, 99);
-        speeds = speed.speed_dist;
-        int chosen_speed = speeds[rand];
+        float chosen_speed = speed.speed_dist[rand]*2500f/3f;
 
-        Debug.LogWarning(rand + " " + speed.speed_dist[10] + " " + time.gameHour);
+        Debug.LogWarning(chosen_speed);
 
         //fix later
-        biker_settings.AgentSpeed = 15000f; //(12/ 3600*25000)/(time.gameHour/1000/3600); //this should be randomly set from speed distribution from 6mph to 20 mph, 
+        biker_settings.AgentSpeed = chosen_speed; //((chosen_speed / 3600)*25000)/((10)/3600); //this should be randomly set from speed distribution from 6mph to 20 mph, 
     }
 
     public void takebike()
     {
         BikesAvailable -= 1;
+        CheckColor();
     }
 
     public void returnbike()
     {
         BikesAvailable += 1;
+        CheckColor();
+    }
+
+    void CheckColor()
+    {
+        if(BikesAvailable > (Capacity*0.25f) && BikesAvailable <= (Capacity * 0.5f))
+        {
+            gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.yellow);
+        }
+
+        if (BikesAvailable <= (Capacity * 0.25f))
+        {
+            gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+        }
+
+        if (BikesAvailable > (Capacity * 0.5f))
+        {
+            gameObject.GetComponent<Renderer>().material.SetColor("_Color", Color.green);
+        }
     }
 }

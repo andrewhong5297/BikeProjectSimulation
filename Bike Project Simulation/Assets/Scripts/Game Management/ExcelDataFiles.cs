@@ -61,7 +61,7 @@ public class ExcelDataFiles : MonoBehaviour
             StartEndMatch2.Remove(key);
         }
         #endregion
-        UnityEngine.Debug.Log("finished " + timer.Elapsed);
+        UnityEngine.Debug.Log("finished reading: " + timer.Elapsed);
         timer.Stop();
     }
 
