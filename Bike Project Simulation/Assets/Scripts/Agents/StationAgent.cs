@@ -9,7 +9,6 @@ public class StationAgent : MonoBehaviour
     public int Id;
     public int Capacity;
     public int BikesAvailable;
-
     public GameObject bike_prefab;
 
     private void Start()
@@ -20,13 +19,9 @@ public class StationAgent : MonoBehaviour
     
     public void SpawnAgent()
     {
-        Debug.LogWarning("agent spawned");
-
         GameObject biker = Instantiate(bike_prefab, new Vector3(transform.position.x, transform.position.y, transform.position.z), transform.rotation);
-
-        var biker_settings = biker.GetComponent<BikeAgent>();
+        var biker_settings = biker.GetComponent<BikeAgentLine>(); //line for non complex navmesh        
         var speed = gamemanager.GetComponent<ExcelDataFiles>();
-        var time = gamemanager.GetComponent<Gamemanager>();
 
         biker_settings.StartingStation = name;
 
@@ -37,22 +32,21 @@ public class StationAgent : MonoBehaviour
 
         //so for every speed between 6mph and 18mph, we have to first convert to mps
         int rand = Random.Range(0, 99);
-        float chosen_speed = speed.speed_dist[rand]*2500f/3f;
-
-        
-        //fix
-        biker_settings.AgentSpeed = 15000f; //((chosen_speed / 3600)*25000)/((10)/3600); //this should be randomly set from speed distribution from 6mph to 20 mph, 
+        float chosen_speed = speed.speed_dist[rand]*600f; //2500 is 10 seconds, divide by 6 because 600
+        biker_settings.AgentSpeed = chosen_speed; //((chosen_speed / 3600)*25000)/((10 seconds per gamehour)/3600); //this should be randomly set from speed distribution from 6mph to 20 mph, 
     }
 
     public void takebike()
     {
         BikesAvailable -= 1;
+        Debug.LogWarning(name + " bike taken");
         CheckColor();
     }
 
     public void returnbike()
     {
         BikesAvailable += 1;
+        Debug.LogWarning(name + " bike returned");
         CheckColor();
     }
 

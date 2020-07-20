@@ -13,7 +13,7 @@ public class Score : MonoBehaviour
 
     private void Update()
     {
-        bikescore.text = "Not Enough Bikes: " + NoBikes;
-        dockscore.text = "Not Enough Docks: " + NoDocks;
+        bikescore.text = "  Not Enough Bikes: " + NoBikes;
+        dockscore.text = "  Not Enough Docks: " + NoDocks;
     }
 }

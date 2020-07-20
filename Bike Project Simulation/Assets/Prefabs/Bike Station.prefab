@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2424476903789929811}
-  - component: {fileID: 5132686494535968243}
   - component: {fileID: 4047268309287850110}
   - component: {fileID: 2781918554881763106}
+  - component: {fileID: 8802821236927570752}
   m_Layer: 0
   m_Name: Bike Station
-  m_TagString: Untagged
+  m_TagString: station
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33,14 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5132686494535968243
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6539974059863863087}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &4047268309287850110
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -95,5 +87,13 @@ MonoBehaviour:
   Id: 0
   Capacity: 0
   BikesAvailable: 0
-  bike_prefab: {fileID: 1835024950497336235, guid: 72cc7c631504cfe48a5541f735fff291,
+  bike_prefab: {fileID: 4920960646068812278, guid: 2aa8d4db9cf29c54a801a8b44112c3f6,
     type: 3}
+--- !u!33 &8802821236927570752
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6539974059863863087}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}

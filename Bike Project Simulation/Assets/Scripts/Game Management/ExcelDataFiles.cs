@@ -9,7 +9,6 @@ using UnityEngine;
 
 public class ExcelDataFiles : MonoBehaviour
 {
-    
     Stopwatch timer = new Stopwatch();
 
     #region init excel dictionary lists
@@ -43,7 +42,6 @@ public class ExcelDataFiles : MonoBehaviour
         ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/startendstationmatching2.csv", StartEndMatch2);
          
         ReadCsvFile("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/ridersdayhourdistribution.csv", RidesDistribution);
- 
         
         #region append and remove data for start/end matching
         foreach (string key in StartEndMatch1.Keys)

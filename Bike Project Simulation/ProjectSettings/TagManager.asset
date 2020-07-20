@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Biker
   - Truck
+  - station
+  - Bridge
+  - Manhattan
+  - Bronx
+  - Queens
+  - Brooklyn
+  - Jersey
   layers:
   - Default
   - TransparentFX
@@ -17,7 +24,7 @@ TagManager:
   - 
   - street
   - player
-  - 
+  - ground
   - 
   - 
   - 

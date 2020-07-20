@@ -12,7 +12,7 @@ public class BikeAgent : MonoBehaviour
     GameObject gamemanager;
 
     public NavMeshAgent Agent;
-    Stopwatch timer = new Stopwatch();
+    Stopwatch bike_timer = new Stopwatch();
 
     //station vars
     public string StartingStation;
@@ -25,49 +25,50 @@ public class BikeAgent : MonoBehaviour
     public float AgentSpeed; //distance per second.
     float distancetotravel;
     float timetotravel; //time to go to endstation, in case something goes wrong with navmesh pathfinding
-
+    
     private void Start()
-    {
-        
-        NavMeshHit myNavHit;
-
-        if (NavMesh.SamplePosition(transform.position, out myNavHit, 500, -1))
-        {
-            transform.position = myNavHit.position; //some of the stations aren't really on the navmesh so this helps reset it
-        }
-        
+    {       
         Agent.updateUpAxis = false;
         gamemanager = GameObject.Find("GameManager");
         stationmanager = GameObject.Find("Station Manager");
         start = GameObject.Find(StartingStation);
-        FindDestination();
-        UnityEngine.Debug.LogWarning("destination found");
-    }
 
+        FindDestination();
+    }
+    
     // Update is called once per frame
     void Update()
     {
         //only check once find destination has finished running
         if (endfound)
         {
-            timer.Start();
-            float timeelap = timer.ElapsedMilliseconds / 1000f;
+            bike_timer.Start();
             
-            /*
+            float timeelap = bike_timer.ElapsedMilliseconds / 1000f;
+            
+            
             //timetotravel needs to be fixed
-            if(timeelap > 3)
+            if(timeelap > 30)
             {   
                 UnityEngine.Debug.LogError("destroyed on time basis");
                 CheckEnd();
-                OnDestinationReached();
+                Vector3 dist_vects = end.transform.position - transform.position;
+                float dist_news = dist_vects.sqrMagnitude;
+                if (dist_news <= 20)
+                {
+                    OnDestinationReached();
+                }
             }
-            */
+            
 
-            if (Vector3.Distance(gameObject.transform.position, end.transform.position) <= 20)
+            Vector3 dist_vect = end.transform.position - transform.position;
+            float dist_new = dist_vect.sqrMagnitude;
+
+            if (dist_new <= 20)
             {
                 CheckEnd();
                 //nested loop in case we have to go to a different dock
-                if (Vector3.Distance(gameObject.transform.position, end.transform.position) <= 20)
+                if (dist_new <= 20)
                 {
                     OnDestinationReached();
                 }
@@ -77,6 +78,7 @@ public class BikeAgent : MonoBehaviour
 
     void FindDestination()
     {
+        UnityEngine.Debug.Log("finding destination");
         var time = gamemanager.GetComponent<Gamemanager>();
         var data = gamemanager.GetComponent<ExcelDataFiles>();
 
@@ -92,15 +94,8 @@ public class BikeAgent : MonoBehaviour
             UnityEngine.Debug.Log("keynotfound");
             EndingStation = FindNearestStation(start).name;
         }
-
+        
         end = GameObject.Find(EndingStation);
-        var end_status = end.GetComponent<StationAgent>();
-
-        while (end_status.Capacity == end_status.BikesAvailable)
-        {
-            end = FindNearestStation(end);
-            //no penalty here as haven't left yet
-        }
 
         Agent.SetDestination(end.transform.position);
         Agent.speed = AgentSpeed;
@@ -123,20 +118,19 @@ public class BikeAgent : MonoBehaviour
         var end_status = end.GetComponent<StationAgent>();
         var scorecard = gamemanager.GetComponent<Score>();
 
-        while (end_status.Capacity == end_status.BikesAvailable)
+        if (end_status.Capacity == end_status.BikesAvailable)
         {
             scorecard.NoDocks += 1;
             end = FindNearestStation(end);
         }
 
-        //need a try except here to just call time to travel
         Agent.SetDestination(end.transform.position);
 
         //timer parameters
         Vector3 dist_vect = end.transform.position - transform.position;
         float dist_new = dist_vect.sqrMagnitude * 1.2f; //multiplier for not birds-eye-view
         timetotravel = AgentSpeed / dist_new;
-        timer.Restart();
+        bike_timer.Restart();
         Agent.speed = AgentSpeed / 2; //usually people move slower when looking for stations to dock
     }
 

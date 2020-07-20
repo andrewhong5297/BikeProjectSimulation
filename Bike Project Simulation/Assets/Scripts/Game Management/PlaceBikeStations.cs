@@ -43,6 +43,7 @@ public class PlaceBikeStations : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         WebClient client = new WebClient();
         Stream stream = client.OpenRead("https://raw.githubusercontent.com/andrewhong5297/BikeProjectSimulation/master/Bike%20Project%20Simulation/station_info.csv");
         using (var reader = new StreamReader(stream))//@"C:\Users\Andrew\Documents\PythonScripts\Bike Project\station_status_daily\station_info.csv"))
@@ -74,7 +75,13 @@ public class PlaceBikeStations : MonoBehaviour
         ScaleLatLon();
 
         //instantiate 
-        InstantiateStations();
+        //InstantiateStations();
+        
+        //get list
+        for (int i = 0; i < this.transform.childCount; i++)
+        {
+            stations.Add(this.transform.GetChild(i).gameObject);
+        }
         manager.gamestate = 1; //starts the game!
     }
 
